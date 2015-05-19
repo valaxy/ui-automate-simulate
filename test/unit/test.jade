@@ -11,16 +11,16 @@ html
 
         iframe
 
-        script(src="../../bower_components/jquery/dist/jquery.js")
-        script(src="../../bower_components/jquery-simulate/jquery.simulate.js")
+        //script(src="../../bower_components/jquery-simulate/jquery.simulate.js")
         script(src="../../bower_components/qunit/qunit/qunit.js")
         script(src="../../bower_components/requirejs/require.js")
         script.
             requirejs.config({
                 baseUrl: '../../',
                 paths  : {
-                    'text' : 'bower_components/requirejs-text/text',
-                    'async': 'bower_components/async/lib/async'
+                    'jquery': 'bower_components/jquery/dist/jquery',
+                    'text'  : 'bower_components/requirejs-text/text',
+                    'async' : 'bower_components/async/lib/async'
                 }
             })
             require(['test/unit/test'])

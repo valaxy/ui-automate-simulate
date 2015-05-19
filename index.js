@@ -1,5 +1,6 @@
 define(function (require) {
 	var async = require('async')
+	var $ = require('jquery')
 
 	var Command = function (options) {
 		options = options || {}
