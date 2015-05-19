@@ -1,4 +1,6 @@
-define(function () {
+define(function (require) {
+	var async = require('async')
+
 	var Command = function (options) {
 		options = options || {}
 		this._doc = options.document || document
@@ -18,21 +20,50 @@ define(function () {
 	}
 
 	Command.prototype = {
+		getOnly: function (selector) {
+			var doms = this._doc.querySelectorAll(selector)
+			assumeOne(doms)
+			return doms[0]
+		},
+
+		hasOnly: function (selector) {
+			return this._doc.querySelectorAll(selector).length == 1
+		},
+
+		//------------API--------------
+
 		clearValue: function (selector) {
-			var texts = this._doc.querySelectorAll(selector)
-			assumeZero(texts)
-			for (var i = 0; i < texts.length; i++) {
-				var text = texts[i]
-				text.value = ''
-			}
+			this.getOnly(selector).value = ''
+		},
+
+		click: function (selector) {
+			$(this.getOnly(selector)).click()
 		},
 
 		getValue: function (selector) {
 			var texts = this._doc.querySelectorAll(selector)
 			assumeOne(texts)
 			return texts[0].value
-		}
+		},
 
+		waitForElementPresent: function (selector, time) {
+			var begin = +new Date
+			var over = false
+			var me = this
+			async.whilst(
+				function () {
+					return over || (+new Date - begin < time)
+				},
+				function (callback) {
+					if (me.hasOnly()) {
+						over = true
+						callback()
+					} else {
+						setTimeout(callback, 300) // every 300ms time to check
+					}
+				}
+			)
+		}
 	}
 
 	return Command

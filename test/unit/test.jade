@@ -18,8 +18,9 @@ html
         script.
             requirejs.config({
                 baseUrl: '../../',
-                path: {
-                    'text': 'bower_components/requirejs-text/text'
+                paths  : {
+                    'text' : 'bower_components/requirejs-text/text',
+                    'async': 'bower_components/async/lib/async'
                 }
             })
             require(['test/unit/test'])

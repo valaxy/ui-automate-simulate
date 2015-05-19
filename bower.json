@@ -6,6 +6,9 @@
   "authors": [
     "valaxy <valaxy@qq.com>"
   ],
+  "main": [
+    "index.js"
+  ],
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -21,6 +24,7 @@
   "devDependencies": {
     "requirejs": "~2.1.17",
     "qunit": "~1.18.0",
-    "requirejs-text": "~2.0.14"
+    "requirejs-text": "~2.0.14",
+    "async": "~0.9.2"
   }
 }
