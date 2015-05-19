@@ -1,0 +1,26 @@
+{
+  "name": "ui-automate-simulate",
+  "main": "index.js",
+  "version": "0.1.0-dev",
+  "homepage": "https://github.com/valaxy/ui-automate-simulate",
+  "authors": [
+    "valaxy <valaxy@qq.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery-simulate": "~1.0.1",
+    "jquery": "~2.1.4"
+  },
+  "devDependencies": {
+    "requirejs": "~2.1.17",
+    "qunit": "~1.18.0",
+    "requirejs-text": "~2.0.14"
+  }
+}
