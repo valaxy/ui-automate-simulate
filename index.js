@@ -30,7 +30,10 @@ define(function (require) {
 			return this._doc.querySelectorAll(selector).length == 1
 		},
 
-		//------------API--------------
+		//-----------------------------------------------------------
+		// ¡üAdd API¡ü
+		// ¡ýNightwatch API¡ý
+		//-----------------------------------------------------------
 
 		clearValue: function (selector) {
 			this.getOnly(selector).value = ''
@@ -40,10 +43,22 @@ define(function (require) {
 			$(this.getOnly(selector)).click()
 		},
 
+		closeWindow: function () {
+			throw new Error('closeWindow can not implement')
+		},
+
+		getTitle: function () {
+			return this._doc.title
+		},
+
 		getValue: function (selector) {
 			var texts = this._doc.querySelectorAll(selector)
 			assumeOne(texts)
 			return texts[0].value
+		},
+
+		pause: function (ms, callback) {
+			setTimeout(callback, ms)
 		},
 
 		waitForElementPresent: function (selector, time) {

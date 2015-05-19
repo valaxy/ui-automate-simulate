@@ -4,7 +4,8 @@ define(function (require) {
 
 	var modules = [
 		'../clearValue/index',
-		'../click/index'
+		'../click/index',
+		'../getTitle/index'
 	]
 
 	var iframe = document.querySelector('iframe')
