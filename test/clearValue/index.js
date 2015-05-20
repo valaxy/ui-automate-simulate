@@ -1,4 +1,6 @@
-define(function () {
+define(function (require) {
+	var c = require('../global').command
+	
 	QUnit.module('clearValue')
 
 	QUnit.test('clear textarea', function (assert) {

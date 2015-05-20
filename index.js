@@ -62,20 +62,27 @@ define(function (require) {
 			setTimeout(callback, ms)
 		},
 
-		waitForElementPresent: function (selector, time) {
+		waitForElementPresent: function (selector, timeout, callback) {
 			var begin = +new Date
-			var over = false
+			var over = false // true: the query is over
 			var me = this
 			async.whilst(
 				function () {
-					return over || (+new Date - begin < time)
+					return !(over || (+new Date - begin >= timeout))
 				},
-				function (callback) {
-					if (me.hasOnly()) {
+				function (done) {
+					if (me.hasOnly(selector)) {
 						over = true
+						done()
+					} else {
+						setTimeout(done, 200) // every 200ms time to check
+					}
+				},
+				function () {
+					if (over) {
 						callback()
 					} else {
-						setTimeout(callback, 300) // every 300ms time to check
+						throw new Error('Timeout and ' + selector + ' is not exist')
 					}
 				}
 			)

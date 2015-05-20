@@ -1,11 +1,13 @@
 define(function (require) {
 	var Command = require('../../index')
 	var async = require('async')
+	var global = require('../global')
 
 	var modules = [
-		'../clearValue/index',
-		'../click/index',
-		'../getTitle/index'
+		'clearValue',
+		'click',
+		'getTitle',
+		'waitForElementPresent'
 	]
 
 	var iframe = document.querySelector('iframe')
@@ -18,17 +20,18 @@ define(function (require) {
 		function (done) {
 			var module = modules[i]
 			iframe.onload = function () {
-				window.c = new Command({
+				global.command = new Command({
 					document: iframe.contentDocument
 				})
-				require([module], function () {
+				global.iframe = iframe
+				require(['../' + module + '/index'], function () {
 					i++
 					iframe.onload = null
 					done()
 				})
 			}
 
-			iframe.src = module + '.html'
+			iframe.src = '../' + module + '/index.html'
 		},
 		function () {
 		}
