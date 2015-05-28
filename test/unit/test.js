@@ -6,11 +6,11 @@ define(function (require) {
 	var modules = [
 		'waitForLoaded',
 
-		//'clearValue',
-		//'click',
-		//'getTitle',
+		'clearValue',
+		'click',
+		'getTitle',
 		'init',
-		//'waitForElementPresent'
+		'waitForElementPresent'
 	]
 
 	var iframe = document.querySelector('iframe')

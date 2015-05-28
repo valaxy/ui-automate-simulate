@@ -4,7 +4,11 @@ define(function (require) {
 	QUnit.module('click')
 
 	QUnit.test('click button', function (assert) {
-		c.click('button')
-		assert.equal(c.getValue('input'), 'has click')
+		var async = assert.async()
+		c.init('../click/index.html').then(function () {
+			c.click('button')
+			assert.equal(c.getValue('input'), 'has click')
+			async()
+		})
 	})
 })

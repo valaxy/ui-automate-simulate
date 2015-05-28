@@ -26,6 +26,7 @@ define(function (require) {
 		}
 	}
 
+	// todo, ²»Ö§³ÖXPATH
 	Command.prototype = {
 		hasOnly: function (selector) {
 			return this._doc.querySelectorAll(selector).length == 1
@@ -124,10 +125,16 @@ define(function (require) {
 		},
 
 
-		waitForElementPresent: function (selector, timeout, callback) {
+		waitForElementPresent: function (selector, timeout) {
 			var begin = +new Date
 			var over = false // true: the query is over
 			var me = this
+			var resolve
+			var reject
+			var promise = new Promise(function (_resolve, _reject) {
+				resolve = _resolve
+				reject = _reject
+			})
 			async.whilst(
 				function () {
 					return !(over || (+new Date - begin >= timeout))
@@ -142,12 +149,13 @@ define(function (require) {
 				},
 				function () {
 					if (over) {
-						callback()
+						resolve()
 					} else {
-						throw new Error('Timeout and ' + selector + ' is not exist')
+						reject('Timeout and ' + selector + ' is not exist')
 					}
 				}
 			)
+			return promise
 		}
 	}
 

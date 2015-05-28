@@ -4,6 +4,11 @@ define(function (require) {
 	QUnit.module('getTitle')
 
 	QUnit.test('simple case', function (assert) {
-		assert.equal(c.getTitle(), 'test title')
+		var async = assert.async()
+		c.init('../getTitle/index.html').then(function () {
+			assert.equal(c.getTitle(), 'test title')
+			async()
+		})
+
 	})
 })
