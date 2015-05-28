@@ -4,13 +4,19 @@ define(function (require) {
 	var global = require('../global')
 
 	var modules = [
-		'clearValue',
-		'click',
-		'getTitle',
-		'waitForElementPresent'
+		'waitForLoaded',
+
+		//'clearValue',
+		//'click',
+		//'getTitle',
+		'init',
+		//'waitForElementPresent'
 	]
 
 	var iframe = document.querySelector('iframe')
+	global.command = new Command({
+		iframe: iframe
+	})
 
 	var i = 0
 	async.whilst(
@@ -19,22 +25,30 @@ define(function (require) {
 		},
 		function (done) {
 			var module = modules[i]
-			iframe.onload = function () {
-				global.command = new Command({
-					document: iframe.contentDocument
-				})
-				global.iframe = iframe
-				require(['../' + module + '/index'], function () {
-					i++
-					iframe.onload = null
-					done()
-				})
-			}
 
-			iframe.src = '../' + module + '/index.html'
+			require(['../' + module + '/index'], function () {
+				i++
+				done()
+			})
 		},
 		function () {
 		}
 	)
 
+	//iframe.onloadstart = function () {
+	//	console.log(222)
+	//}
+	//
+	//iframe.onload = function () {
+	//	console.log(111)
+	//}
+	//
+	//iframe.src = '../click/index.html'
+
+	//setTimeout(function () {
+	//	iframe.contentDocument.head.appendChild(iframe.contentDocument.createElement('script'))
+	//	console.log(iframe.contentDocument)
+	//}, 12)
+
+	//window.iframe = iframe
 })
