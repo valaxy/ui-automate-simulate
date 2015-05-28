@@ -1,0 +1,14 @@
+doctype html
+html
+    head
+        meta(charset="utf-8")
+        title First
+    body
+        h1 Frist Page
+
+        script(src="../../bower_components/requirejs/require.js")
+        script(src="../unit/config.js")
+        script.
+            require(['controler', 'test/mul-pages/usercase'], function (Controler, usercase) {
+                new Controler().exec(usercase)
+            })

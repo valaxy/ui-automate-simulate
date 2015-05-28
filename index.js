@@ -4,13 +4,20 @@ define(function (require) {
 	var Promise = require('es6-promise').Promise
 
 	var Command = function (options) {
-		this._iframe = options.iframe
+		options = options || {}
+		if (options.iframe) {
+			this._iframe = options.iframe
 
-		var me = this
-		this._iframe.addEventListener('load', function () {
-			me._doc = me._iframe.contentDocument
-			me._win = me._iframe.contentWindow
-		})
+			var me = this
+			this._iframe.addEventListener('load', function () {
+				me._doc = me._iframe.contentDocument
+				me._win = me._iframe.contentWindow
+			})
+		} else {
+			this._win = window
+			this._doc = document
+		}
+
 	}
 
 
@@ -28,6 +35,11 @@ define(function (require) {
 
 	// todo, 不支持XPATH
 	Command.prototype = {
+
+		assertNavigating: function () {
+			this.navigating = true
+		},
+
 		hasOnly: function (selector) {
 			return this._doc.querySelectorAll(selector).length == 1
 		},
@@ -116,8 +128,19 @@ define(function (require) {
 		// todo, url参数是可选的, 不应该有callback, 没有timeout
 		/** Navigate to a url */
 		init: function (url, timeout) {
-			this._iframe.src = url
-			return this.waitForLoaded(timeout)
+			if (this._iframe) {
+				this._iframe.src = url
+				return this.waitForLoaded(timeout)
+			} else {
+				this._win.location.href = url
+			}
+		},
+
+		// todo, id无用, no callback
+		injectScript: function (scriptUrl) {
+			var script = this._doc.createElement('script')
+			script.src = scriptUrl
+			this._doc.body.appendChild(script)
 		},
 
 		pause: function (ms, callback) {
@@ -162,3 +185,10 @@ define(function (require) {
 	return Command
 
 })
+
+//var resolve
+//var reject
+//var promise = new Promise(function (success, fail) {
+//	resolve = success
+//	reject = fail
+//})

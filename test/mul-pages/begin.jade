@@ -1,0 +1,12 @@
+doctype html
+html
+    head
+        meta(charset="utf-8")
+        title Test Begin Page
+    body
+        script(src="../../bower_components/requirejs/require.js")
+        script(src="../unit/config.js")
+        script.
+            require(['controler'], function (Controler) {
+                new Controler().start('first.html')
+            })
