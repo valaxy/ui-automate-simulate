@@ -12,6 +12,7 @@
 	out    : '../dist/ui-automate.js',
 	//optimize: 'none',
 	include: [
-		'index'
+		'src/command',
+		'src/controler'
 	]
 })

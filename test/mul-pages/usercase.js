@@ -1,5 +1,5 @@
 define(function (require) {
-	var Command = require('../../index')
+	var Command = require('../../src/command')
 
 	var command = new Command
 

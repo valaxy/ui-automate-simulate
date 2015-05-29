@@ -8,7 +8,7 @@ define(function (require) {
 		localStorage[KEY] = JSON.stringify(state)
 	}
 
-	var Controler = function () {
+	var Controler = window.Controler = function () {
 		// no thing
 	}
 

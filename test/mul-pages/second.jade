@@ -9,6 +9,6 @@ html
         script(src="../../bower_components/requirejs/require.js")
         script(src="../unit/config.js")
         script.
-            require(['controler', 'test/mul-pages/usercase'], function (Controler, usercase) {
+            require(['src/controler', 'test/mul-pages/usercase'], function (Controler, usercase) {
                 new Controler().exec(usercase)
             })

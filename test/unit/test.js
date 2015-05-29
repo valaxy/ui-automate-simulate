@@ -1,5 +1,5 @@
 define(function (require) {
-	var Command = require('../../index')
+	var Command = require('../../command')
 	var async = require('async')
 	var global = require('../global')
 

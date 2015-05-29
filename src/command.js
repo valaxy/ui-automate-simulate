@@ -3,7 +3,7 @@ define(function (require) {
 	var $ = require('jquery')
 	var Promise = require('es6-promise').Promise
 
-	var Command = function (options) {
+	var Command = window.Command = function (options) {
 		options = options || {}
 		if (options.iframe) {
 			this._iframe = options.iframe
