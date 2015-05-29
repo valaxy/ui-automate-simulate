@@ -26,7 +26,6 @@ define(function (require) {
 		}
 
 		var state = JSON.parse(localStorage[KEY])
-		console.log(state)
 
 		var promise = null
 		var flag = true
