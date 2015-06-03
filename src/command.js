@@ -37,6 +37,12 @@ define(function (require) {
 		}
 	}
 
+
+	/* There are 3 commands
+	 * - sync command
+	 * - async command
+	 */
+
 	// todo, no XPATH
 	/** Events:
 	 **     assertFail:
@@ -205,10 +211,18 @@ define(function (require) {
 		 */
 		waitNavigating: function (timeout) {
 			timeout = timeout === undefined ? 5000 : timeout
+
 			var me = this
+			var resolve
+
 			setTimeout(function () {
 				me.emitter.emit('error', timeout + 'ms timeout of navigating')
+				resolve()
 			}, timeout)
+
+			return new Promise(function (success) {
+				resolve = success
+			})
 		}
 	}
 

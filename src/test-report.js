@@ -25,9 +25,10 @@ define(function () {
 			return obj
 		},
 
+
 		reportError: function (msg) {
-			this.usercase[this.step - 1].status = 'fail'
-			this.usercase[this.step - 1].msg = msg
+			this.usercase[this.step].status = 'fail'
+			this.usercase[this.step].msg = msg
 			save.call(this)
 		},
 

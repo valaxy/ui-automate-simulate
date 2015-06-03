@@ -4,7 +4,7 @@ define(function () {
 
 		return [
 			function () {
-				driver.waitNavigating(1000) // should be timeout
+				return driver.waitNavigating(1000) // should be timeout
 			}
 		]
 

@@ -41,8 +41,7 @@ define(function (require) {
 	/** Report data
 	 */
 	Controler.prototype.report = function () {
-		var report = TestReport.parse(localStorage[KEY])
-		console.log(report)
+		console.log(localStorage[KEY])
 	}
 
 	Controler.prototype.exec = function (userCase) {
@@ -63,6 +62,7 @@ define(function (require) {
 			location.href = testData.endPage
 		})
 
+
 		this._driver.emitter.on('navigating', function () {
 			flag = false // break
 		})
@@ -78,25 +78,38 @@ define(function (require) {
 
 				// exec next step
 				if (testData.step == userCase.length) { // final step
-					//location.href = testData.endPage
 					flag = false
 					return
 				}
 
 				new Promise(function (resolve) {
+					var promise = userCase[testData.step]()
 					if (promise) {
 						promise.then(function () {
-							promise = userCase[testData.step]()
 							resolve()
 						})
 					} else {
-						promise = userCase[testData.step]()
 						resolve()
 					}
 				}).then(function () {
 						testData.usercase[testData.step].status = 'success'
 						next()
 					})
+
+				//new Promise(function (resolve) {
+				//	if (promise) {
+				//		promise.then(function () {
+				//			promise = userCase[testData.step]()
+				//			resolve()
+				//		})
+				//	} else {
+				//		promise = userCase[testData.step]()
+				//		resolve()
+				//	}
+				//}).then(function () {
+				//		testData.usercase[testData.step].status = 'success'
+				//		next()
+				//	})
 			},
 			function () {
 
