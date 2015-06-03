@@ -7,10 +7,10 @@
 		'es6-promise': 'bower_components/es6-promise/promise.min'
 	},
 
-	//insertRequire: ['src/home/home'],
-	//wrapShim     : true,
+	insertRequire: ['src/home/home'],
+	wrapShim     : true,
 	out    : '../dist/ui-automate.js',
-	//optimize: 'none',
+	optimize: 'none',
 	include: [
 		'src/command',
 		'src/controler'

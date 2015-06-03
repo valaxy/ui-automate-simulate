@@ -1,43 +1,84 @@
 define(function (require) {
 	var Promise = require('es6-promise').Promise
 	var async = require('async')
+	var TestReport = require('./test-report')
 
 	var KEY = '__mptest'
 
-	var save = function (state) {
-		localStorage[KEY] = JSON.stringify(state)
+	var save = function (testData) {
+		localStorage[KEY] = testData.toString()
 	}
 
-	var Controler = window.Controler = function () {
-		// no thing
+
+	// as a global var to use
+	var Controler = window.Controler = function (driver) {
+		this._driver = driver
 	}
 
-	Controler.prototype.start = function (url) {
-		save({
-			session: +new Date, // 表示这次测试的session id
-			step   : -1         // 上一个执行步骤是多少, 现在应该执行第(step+1)步了, 因此初始是-1
+
+	/** Start a new case
+	 ** options:
+	 **     startPage: page of initializing test environment
+	 **     endPage:   page of collecting final report data
+	 */
+	Controler.prototype.start = function (options) {
+		this._options = options
+
+		var beginPage = this._options.beginPage
+		var endPage = this._options.endPage
+		var usercase = this._options.usercase
+
+		var testData = TestReport.create({
+			endPage : endPage,
+			usercase: usercase
 		})
-		location.href = url
+		save(testData)
+
+		location.href = beginPage
+	}
+
+
+	/** Report data
+	 */
+	Controler.prototype.report = function () {
+		var report = TestReport.parse(localStorage[KEY])
+		console.log(report)
 	}
 
 	Controler.prototype.exec = function (userCase) {
 		if (!localStorage[KEY]) {
-			throw new Error('can not be')
+			throw new Error('Don\'t have test data')
 		}
 
-		var state = JSON.parse(localStorage[KEY])
+		var testData = TestReport.parse(localStorage[KEY])
+
 
 		var promise = null
 		var flag = true
+
+
+		this._driver.emitter.on('error', function (msg) {
+			flag = false // break
+			testData.reportError(msg)
+			location.href = testData.endPage
+		})
+
+		this._driver.emitter.on('navigating', function () {
+			flag = false // break
+		})
+
+
 		async.whilst(
 			function () {
 				return flag
 			},
-			function () {
-				state.step += 1
-				save(state)
-				if (state.step == userCase.steps.length) { // over
-					alert('任务执行完毕')
+			function (next) {
+				testData.step += 1
+				save(testData)
+
+				// exec next step
+				if (testData.step == userCase.length) { // final step
+					//location.href = testData.endPage
 					flag = false
 					return
 				}
@@ -45,20 +86,17 @@ define(function (require) {
 				new Promise(function (resolve) {
 					if (promise) {
 						promise.then(function () {
-							promise = userCase.steps[state.step]()
+							promise = userCase[testData.step]()
 							resolve()
 						})
 					} else {
-						promise = userCase.steps[state.step]()
+						promise = userCase[testData.step]()
 						resolve()
 					}
 				}).then(function () {
-						if (userCase.command.navigating) {
-							flag = false
-							return
-						}
+						testData.usercase[testData.step].status = 'success'
+						next()
 					})
-
 			},
 			function () {
 

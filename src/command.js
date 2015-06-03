@@ -2,7 +2,10 @@ define(function (require) {
 	var async = require('async')
 	var $ = require('jquery')
 	var Promise = require('es6-promise').Promise
+	var EventEmitter = require('eventemitter2')
 
+
+	// as a global var to use
 	var Command = window.Command = function (options) {
 		options = options || {}
 		if (options.iframe) {
@@ -18,6 +21,7 @@ define(function (require) {
 			this._doc = document
 		}
 
+		this.emitter = new EventEmitter
 	}
 
 
@@ -33,8 +37,19 @@ define(function (require) {
 		}
 	}
 
-	// todo, ²»Ö§³ÖXPATH
+	// todo, no XPATH
+	/** Events:
+	 **     assertFail:
+	 **     error(msg):
+	 */
 	Command.prototype = {
+
+		create: function () {
+			var obj = Object.create()
+			obj.navigating = false
+			obj.fail = false
+			return obj
+		},
 
 		assertNavigating: function () {
 			this.navigating = true
@@ -76,8 +91,8 @@ define(function (require) {
 		},
 
 		//-----------------------------------------------------------
-		// ¡üNot NightWatch API¡ü
-		// ¡ýNightwatch API¡ý
+		// ï¿½ï¿½Not NightWatch APIï¿½ï¿½
+		// ï¿½ï¿½Nightwatch APIï¿½ï¿½
 		//-----------------------------------------------------------
 
 		clearValue: function (selector) {
@@ -128,7 +143,7 @@ define(function (require) {
 		},
 
 
-		// todo, url²ÎÊýÊÇ¿ÉÑ¡µÄ, ²»Ó¦¸ÃÓÐcallback, Ã»ÓÐtimeout
+		// todo, urlï¿½ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½Ñ¡ï¿½ï¿½, ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½callback, Ã»ï¿½ï¿½timeout
 		/** Navigate to a url */
 		init: function (url, timeout) {
 			if (this._iframe) {
@@ -139,7 +154,7 @@ define(function (require) {
 			}
 		},
 
-		// todo, idÎÞÓÃ, no callback
+		// todo, idï¿½ï¿½ï¿½ï¿½, no callback
 		injectScript: function (scriptUrl) {
 			var script = this._doc.createElement('script')
 			script.src = scriptUrl
@@ -182,6 +197,18 @@ define(function (require) {
 				}
 			)
 			return promise
+		},
+
+
+		/** If current page is abâˆ‚out to navigate to another page, make sure to call it
+		 ** timeout: default is 5000, fail when reach the timeout
+		 */
+		waitNavigating: function (timeout) {
+			timeout = timeout === undefined ? 5000 : timeout
+			var me = this
+			setTimeout(function () {
+				me.emitter.emit('error', timeout + 'ms timeout of navigating')
+			}, timeout)
 		}
 	}
 
