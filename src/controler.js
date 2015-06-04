@@ -67,7 +67,6 @@ define(function (require) {
 						resolve()
 					}
 				}).then(function () {
-						testReport.successStep()
 						next()
 					})
 			},

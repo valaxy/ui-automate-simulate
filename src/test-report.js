@@ -72,15 +72,12 @@ define(function () {
 		 */
 		nextStep: function () {
 			var data = read()
+			if (data.step >= 0) {
+				data.userCase[data.step].status = 'success'
+			}
 			data.step += 1
 			save(data)
 			return data.step != data.userCase.length
-		},
-
-		successStep: function () {
-			var data = read()
-			data.userCase[data.step].status = 'success'
-			save(data)
 		},
 
 		/** Report a error */
