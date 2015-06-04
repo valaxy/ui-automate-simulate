@@ -67,7 +67,9 @@ define(function (require) {
 
 		getOnly: function (selector) {
 			var doms = this._doc.querySelectorAll(selector)
-			assumeOne(doms)
+			if (doms.length != 1) {
+				throw new Error('query selector "' + selector + '" find count of ' + doms.length)
+			}
 			return doms[0]
 		},
 
@@ -97,8 +99,8 @@ define(function (require) {
 		},
 
 		//-----------------------------------------------------------
-		// ��Not NightWatch API��
-		// ��Nightwatch API��
+		// UP:   Not Nightwatch API
+		// DOWN: Nightwatch API
 		//-----------------------------------------------------------
 
 		clearValue: function (selector) {
@@ -146,6 +148,12 @@ define(function (require) {
 			var texts = this._doc.querySelectorAll(selector)
 			assumeOne(texts)
 			return texts[0].value
+		},
+
+
+		setValue: function (selector, value) {
+			var input = this.getOnly(selector)
+			input.value = value
 		},
 
 

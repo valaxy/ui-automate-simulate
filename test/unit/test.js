@@ -10,6 +10,7 @@ define(function (require) {
 		'click',
 		'getTitle',
 		'init',
+		'setValue',
 		'waitForElementPresent'
 	]
 
