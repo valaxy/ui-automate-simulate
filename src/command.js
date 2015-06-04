@@ -108,10 +108,7 @@ define(function (require) {
 		},
 
 		click: function (selector) {
-			this.getOnly(selector).addEventListener('click', function (e) {
-				console.log(e)
-			})
-			$(this.getOnly(selector)).click()
+			this.getOnly(selector).click()
 		},
 
 		closeWindow: function () {
