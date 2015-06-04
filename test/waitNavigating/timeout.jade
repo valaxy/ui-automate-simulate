@@ -12,5 +12,8 @@ html
                 'src/command',
                 'test/waitNavigating/timeout'], function (Controler, Command, usercase) {
                 var driver = new Command
-                new Controler(driver).exec(usercase(driver))
+                new Controler(driver).exec({
+                    endPage  : '../manual/end.html',
+                    userCase : usercase(driver)
+                })
             })
