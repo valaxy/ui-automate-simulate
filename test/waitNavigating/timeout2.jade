@@ -7,13 +7,5 @@ html
 
         script(src="../../bower_components/requirejs/require.js")
         script(src="../unit/config.js")
-        script.
-            require(['src/controler',
-                'src/command',
-                'test/waitNavigating/timeout'], function (Controler, Command, usercase) {
-                var driver = new Command
-                new Controler(driver).exec({
-                    endPage  : '../manual/end.html',
-                    userCase : usercase(driver)
-                })
-            })
+        script(src="timeout.js")
+

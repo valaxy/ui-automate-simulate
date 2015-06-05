@@ -11,13 +11,6 @@ define(function (require) {
 	}
 
 
-	/** Report data
-	 */
-	Controler.prototype.report = function () {
-		console.log(localStorage[KEY])
-	}
-
-
 	/** Exec case
 	 ** options:
 	 **     startPage: page of initializing test environment
@@ -35,7 +28,7 @@ define(function (require) {
 		this._driver.emitter.on('error', function (msg) {
 			shouldContinue = false // break
 			testReport.reportError(msg)
-			location.href = options.endPage
+			location.href = options.endPage + '#' + testReport.toBase64()
 		})
 
 

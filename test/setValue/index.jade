@@ -4,3 +4,13 @@ html
         meta(charset="utf-8")
     body
         input(type="text")
+        span
+
+        script.
+            var input = document.querySelector('input')
+            var span = document.querySelector('span')
+            input.addEventListener('keydown', function (e) {
+                if (e.keyCode == 13) {
+                    input.value = 'ok'
+                }
+            })

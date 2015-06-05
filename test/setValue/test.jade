@@ -1,0 +1,21 @@
+doctype html
+html
+    head
+        meta(charset="utf-8")
+    body
+        input(type="text")
+
+        script(src="../../bower_components/requirejs/require.js")
+        script(src="../unit/config.js")
+        script.
+            var input = document.querySelector('input')
+            input.addEventListener('keydown', function (e) {
+                console.log(e)
+            })
+
+
+            require(['jquery', 'jquery-simulate'], function ($) {
+                $(input).simulate('keydown', {
+                    keyCode: 'Q'
+                })
+            })

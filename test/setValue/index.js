@@ -3,7 +3,7 @@ define(function (require) {
 
 	QUnit.module('setValue')
 
-	QUnit.test('common', function (assert) {
+	QUnit.test('input string', function (assert) {
 		var async = assert.async()
 		c.init('../setValue/index.html').then(function () {
 			c.setValue('input', '123')
@@ -11,4 +11,15 @@ define(function (require) {
 			async()
 		})
 	})
+
+
+	QUnit.test('press enter', function (assert) {
+		var async = assert.async()
+		c.init('../setValue/index.html').then(function () {
+			c.setValue('input', ['abc', c.KEYS.ENTER])
+			assert.equal(c.getValue('input'), 'ok')
+			async()
+		})
+	})
+
 })

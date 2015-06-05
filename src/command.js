@@ -3,6 +3,7 @@ define(function (require) {
 	var $ = require('jquery')
 	var Promise = require('es6-promise').Promise
 	var EventEmitter = require('eventemitter2')
+	require('jquery-simulate')
 
 
 	// as a global var to use
@@ -49,6 +50,8 @@ define(function (require) {
 	 **     error(msg):
 	 */
 	Command.prototype = {
+
+		KEYS: $.simulate.keyCode,
 
 		create: function () {
 			var obj = Object.create()
@@ -148,9 +151,20 @@ define(function (require) {
 		},
 
 
-		setValue: function (selector, value) {
+		setValue: function (selector, values) {
 			var input = this.getOnly(selector)
-			input.value = value
+			values = Array.isArray(values) ? values : [values]
+			values.forEach(function (value) {
+				if (typeof value == 'string') {
+					input.value += value
+				} else {
+					$(input).simulate('keydown', {
+						key    : value,
+						code   : value,
+						keyCode: value // integer
+					})
+				}
+			})
 		},
 
 

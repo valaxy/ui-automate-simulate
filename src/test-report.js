@@ -55,6 +55,14 @@ define(function () {
 			return Object.create(TestReport)
 		},
 
+		generateRawFromUrl: function () {
+			var base64 = location.hash.substr(1)
+			return JSON.parse(atob(base64))
+		},
+
+		toBase64: function () {
+			return btoa(localStorage[KEY])
+		},
 
 		/** Get step i */
 		getStep: function (i) {
@@ -108,15 +116,6 @@ define(function () {
 })
 
 
-///** According Base64 */
-//createFromUrl: function () {
-//	var base64
-//	return TestReport.create(JSON.parse(atob(base64)))
-//},
-
-//toBase64: function () {
-//	return btoa(this.toString())
-//},
 //
 //
 //parse: function (str) {

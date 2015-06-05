@@ -9,7 +9,7 @@ html
         script(src="../../bower_components/requirejs/require.js")
         script(src="../unit/config.js")
         script.
-            require(['src/controler', 'src/command'], function (Controler, Command) {
-                var driver = new Command
-                new Controler(driver).report()
+            require(['src/test-report'], function (TestReport) {
+                var raw = TestReport.generateRawFromUrl()
+                console.log(raw)
             })

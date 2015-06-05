@@ -1,7 +1,12 @@
-define(function () {
+(function () {
 
-	return function (driver) {
-		return [
+	require([
+		'src/controler',
+		'src/command'], function (Controler, Command) {
+
+		var driver = new Command
+
+		var userCase = [
 			function () {
 				setTimeout(function () {
 					window.location.href = 'timeout2.html'
@@ -13,6 +18,10 @@ define(function () {
 			}
 		]
 
-	}
+		new Controler(driver).exec({
+			endPage : '../manual/end.html',
+			userCase: userCase
+		})
+	})
 
-})
+})()
