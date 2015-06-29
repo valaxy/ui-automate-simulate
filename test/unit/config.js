@@ -6,7 +6,8 @@ requirejs.config({
 		'text'           : 'bower_components/requirejs-text/text',
 		'async'          : 'bower_components/async/lib/async',
 		'es6-promise'    : 'bower_components/es6-promise/promise.min',
-		'eventemitter2'  : 'bower_components/eventemitter2/lib/eventemitter2'
+		'eventemitter2'  : 'bower_components/eventemitter2/lib/eventemitter2',
+		'command'        : 'src/command'
 	},
 
 	shim: {

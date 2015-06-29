@@ -1,5 +1,7 @@
 bower_components/
 node_modules/
 
+dist/uiRun-core.js
+
 *.css
 *.html

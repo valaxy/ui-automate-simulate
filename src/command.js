@@ -7,7 +7,7 @@ define(function (require) {
 
 
 	// as a global var to use
-	var Command = window.Command = function (options) {
+	var Command = function (options) {
 		options = options || {}
 		if (options.iframe) {
 			this._iframe = options.iframe
