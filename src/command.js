@@ -1,13 +1,8 @@
-define(function (require) {
-	var async = require('async')
-	var $ = require('jquery')
-	var Promise = require('es6-promise').Promise
-	var EventEmitter = require('eventemitter2')
-	require('jquery-simulate')
-
+(function () {
+	var $ = uiRun.jQuery
 
 	// as a global var to use
-	var Command = function (options) {
+	var Command = window.uiRun.Command = function (options) {
 		options = options || {}
 		if (options.iframe) {
 			this._iframe = options.iframe
@@ -22,20 +17,6 @@ define(function (require) {
 			this._doc = document
 		}
 
-		this.emitter = new EventEmitter
-	}
-
-
-	var assumeOne = function (ary) {
-		if (ary.length != 1) {
-			throw new Error('must be length 1')
-		}
-	}
-
-	var assumeZero = function (ary) {
-		if (ary.length == 0) {
-			throw new Error('must not be length 0')
-		}
 	}
 
 
@@ -55,14 +36,10 @@ define(function (require) {
 
 		create: function () {
 			var obj = Object.create()
-			obj.navigating = false
 			obj.fail = false
 			return obj
 		},
 
-		assertNavigating: function () {
-			this.navigating = true
-		},
 
 		hasOnly: function (selector) {
 			return this._doc.querySelectorAll(selector).length == 1
@@ -76,30 +53,6 @@ define(function (require) {
 			return doms[0]
 		},
 
-		/** Wait for iframe loaded
-		 ** timeout: in ms, default is 5000
-		 */
-		waitForLoaded: function (timeout) {
-			timeout = timeout || 5000
-			var resolve
-			var reject
-			var promise = new Promise(function (_resolve, _reject) {
-				resolve = _resolve
-				reject = _reject
-			})
-			var iframe = this._iframe
-			var onload = function () {
-				iframe.removeEventListener('load', onload)
-				clearTimeout(t)
-				resolve()
-			}
-			iframe.addEventListener('load', onload)
-
-			var t = setTimeout(function () {
-				reject()
-			}, timeout)
-			return promise
-		},
 
 		//-----------------------------------------------------------
 		// UP:   Not Nightwatch API
@@ -114,29 +67,13 @@ define(function (require) {
 			this.getOnly(selector).click()
 		},
 
-		closeWindow: function () {
-			throw new Error('closeWindow can not be implemented')
-		},
-
-		deleteCookie: function () {
-			throw new Error('no plan to implement deleteCookie')
-		},
-
-		deleteCookies: function () {
-			throw new Error('no plan to implement deleteCookies')
-		},
-
-		end: function () {
-			throw new Error('no plan to implement end')
-		},
-
 		getAttribute: function (selector, attribute) {
 			$(this.getOnly(selector)).attr(attribute)
 		},
 
 
-		getTagName: function () {
-
+		getTagName: function (selector) {
+			return this.getOnly(selector).tagName
 		},
 
 
@@ -145,11 +82,9 @@ define(function (require) {
 		},
 
 		getValue: function (selector) {
-			var texts = this._doc.querySelectorAll(selector)
-			assumeOne(texts)
-			return texts[0].value
+			var control = this.getOnly(selector)
+			return control.value
 		},
-
 
 		setValue: function (selector, values) {
 			var input = this.getOnly(selector)
@@ -167,87 +102,116 @@ define(function (require) {
 			})
 		},
 
+		///** Wait for iframe loaded
+		// ** timeout: in ms, default is 5000
+		// */
+		//waitForLoaded: function (timeout) {
+		//	timeout = timeout || 5000
+		//	var resolve
+		//	var reject
+		//	var promise = new Promise(function (_resolve, _reject) {
+		//		resolve = _resolve
+		//		reject = _reject
+		//	})
+		//	var iframe = this._iframe
+		//	var onload = function () {
+		//		iframe.removeEventListener('load', onload)
+		//		clearTimeout(t)
+		//		resolve()
+		//	}
+		//	iframe.addEventListener('load', onload)
+		//
+		//	var t = setTimeout(function () {
+		//		reject()
+		//	}, timeout)
+		//	return promise
+		//},
+
 
 		// todo, url�����ǿ�ѡ��, ��Ӧ����callback, û��timeout
 		/** Navigate to a url */
 		init: function (url, timeout) {
 			if (this._iframe) {
 				this._iframe.src = url
-				return this.waitForLoaded(timeout)
 			} else {
 				this._win.location.href = url
 			}
 		},
 
-		// todo, id����, no callback
 		injectScript: function (scriptUrl) {
 			var script = this._doc.createElement('script')
 			script.src = scriptUrl
 			this._doc.body.appendChild(script)
-		},
-
-		pause: function (ms, callback) {
-			setTimeout(callback, ms)
-		},
-
-
-		waitForElementPresent: function (selector, timeout) {
-			var begin = +new Date
-			var over = false // true: the query is over
-			var me = this
-			var resolve
-			var reject
-			var promise = new Promise(function (_resolve, _reject) {
-				resolve = _resolve
-				reject = _reject
-			})
-			async.whilst(
-				function () {
-					return !(over || (+new Date - begin >= timeout))
-				},
-				function (done) {
-					if (me.hasOnly(selector)) {
-						over = true
-						done()
-					} else {
-						setTimeout(done, 200) // every 200ms time to check
-					}
-				},
-				function () {
-					if (over) {
-						resolve()
-					} else {
-						reject('Timeout and ' + selector + ' is not exist')
-					}
-				}
-			)
-			return promise
-		},
-
-
-		/** If current page is ab∂out to navigate to another page, make sure to call it
-		 ** timeout: default is 5000, fail when reach the timeout
-		 */
-		waitNavigating: function (timeout) {
-			timeout = timeout === undefined ? 5000 : timeout
-
-			var me = this
-			var resolve
-
-			setTimeout(function () {
-				me.emitter.emit('error', timeout + 'ms timeout of navigating')
-				resolve()
-			}, timeout)
-
-			return new Promise(function (success) {
-				resolve = success
-			})
 		}
+
 	}
 
 	return Command
 
-})
+})();
+
+
+//assertNavigating: function () {
+//	this.navigating = true
+//},
+
+
+//pause: function (ms, callback) {
+//	setTimeout(callback, ms)
+//}
+
+//waitForElementPresent: function (selector, timeout) {
+//	var begin = +new Date
+//	var over = false // true: the query is over
+//	var me = this
+//	var resolve
+//	var reject
+//	var promise = new Promise(function (_resolve, _reject) {
+//		resolve = _resolve
+//		reject = _reject
+//	})
+//	async.whilst(
+//		function () {
+//			return !(over || (+new Date - begin >= timeout))
+//		},
+//		function (done) {
+//			if (me.hasOnly(selector)) {
+//				over = true
+//				done()
+//			} else {
+//				setTimeout(done, 200) // every 200ms time to check
+//			}
+//		},
+//		function () {
+//			if (over) {
+//				resolve()
+//			} else {
+//				reject('Timeout and ' + selector + ' is not exist')
+//			}
+//		}
+//	)
+//	return promise
+//}
+
+///** If current page is about to navigate to another page, make sure to call it
+// ** timeout: default is 5000, fail when reach the timeout
+// */
+//waitNavigating: function (timeout) {
+//	timeout = timeout === undefined ? 5000 : timeout
+//
+//	var me = this
+//	var resolve
+//
+//	setTimeout(function () {
+//		me.emitter.emit('error', timeout + 'ms timeout of navigating')
+//		resolve()
+//	}, timeout)
+//
+//	return new Promise(function (success) {
+//		resolve = success
+//	})
+//}
+
 
 //var resolve
 //var reject

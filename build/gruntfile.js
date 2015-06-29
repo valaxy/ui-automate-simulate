@@ -17,10 +17,13 @@ module.exports = function (grunt) {
 		concat: {
 			concat: {
 				src : [
+					'../src/global.js',
 					'lib/rember.js',
-					'../bower_components/requirejs/require.js',
-					'../dist/uiRun-core.js',
-					'lib/require-command.js'
+					'../bower_components/jquery/dist/jquery.js',
+					'../bower_components/jquery-simulate/jquery.simulate.js',
+					'lib/add-jquery.js',
+					'../src/command.js',
+					'lib/recover.js'
 				],
 				dest: '../dist/uiRun.js'
 			}
@@ -40,11 +43,14 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-shell')
 
 
-	// - 记录原始页require和define等全局变量
-	// - 引入requirejs模块
-	// - 引入uiRun模块
-	// - 加载command模块, 并添加至全局变量命名空间uiRunCommand
-	// - 恢复require和define等全局变量
-	grunt.registerTask('default', ['shell', 'concat', 'uglify'])
-	//grunt.registerTask('default', ['shell', 'concat'])
+	grunt.registerTask('default', ['concat', 'uglify'])
+	//grunt.registerTask('default', ['concat'])
 }
+
+
+// @Deprecated
+// - 记录原始页require和define等全局变量
+// - 引入requirejs模块
+// - 引入uiRun模块
+// - 加载command模块, 并添加至全局变量命名空间uiRunCommand
+// - 恢复require和define等全局变量

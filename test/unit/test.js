@@ -1,17 +1,17 @@
 define(function (require) {
-	var Command = require('command')
 	var async = require('async')
 	var global = require('../global')
+	var Command = window.uiRun.Command
 
 	var modules = [
-		'waitForLoaded',
+		//'waitForLoaded',
 
 		'clearValue',
 		'click',
 		'getTitle',
 		'init',
-		'setValue',
-		'waitForElementPresent'
+		'setValue'
+		//'waitForElementPresent'
 	]
 
 	var iframe = document.querySelector('iframe')
