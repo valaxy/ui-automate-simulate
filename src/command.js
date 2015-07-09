@@ -1,6 +1,10 @@
 (function () {
 	var $ = uiRun.jQuery
 
+	// @问题记录日志
+	// 曾经试过用requirejs来打包, 结果有冲突
+	//
+
 	// as a global var to use
 	var Command = window.uiRun.Command = function (options) {
 		options = options || {}
@@ -20,12 +24,16 @@
 	}
 
 
+	var isCanSeeChar = function (code) {
+
+	}
+
 	/* There are 3 commands
 	 * - sync command
 	 * - async command
 	 */
 
-	// todo, no XPATH
+
 	/** Events:
 	 **     assertFail:
 	 **     error(msg):
@@ -63,9 +71,57 @@
 			this.getOnly(selector).value = ''
 		},
 
+
+		/** Simulate click */
 		click: function (selector) {
-			this.getOnly(selector).click()
+			var element = this.getOnly(selector)
+			var $element = $(element)
+
+			// trigger mousedown
+			$element.simulate('mousedown')
+
+			// trigger focus
+			$element.focus()
+
+			// trigger mouseup
+			$element.simulate('mouseup')
+
+			// trigger click
+			$element.click()
 		},
+
+
+		/** Simulate Keyboard
+		 ** value: the key code
+		 */
+		sendKey: function (selector, value) {
+			var $input = $(this.getOnly(selector))
+
+			$input.simulate('keydown', {
+				key    : value,
+				code   : value,
+				keyCode: value // integer
+			})
+
+			$input.simulate('keypress', {
+				key    : value,
+				code   : value,
+				keyCode: value
+			})
+
+			$input.simulate('keyup', {
+				key    : value,
+				code   : value,
+				keyCode: value
+			})
+		},
+
+		/** Simuate Keyboard */
+		inputText: function (selector, text) {
+			var input = this.getOnly(selector)
+			input.value += text
+		},
+
 
 		getAttribute: function (selector, attribute) {
 			$(this.getOnly(selector)).attr(attribute)
@@ -86,21 +142,6 @@
 			return control.value
 		},
 
-		setValue: function (selector, values) {
-			var input = this.getOnly(selector)
-			values = Array.isArray(values) ? values : [values]
-			values.forEach(function (value) {
-				if (typeof value == 'string') {
-					input.value += value
-				} else {
-					$(input).simulate('keydown', {
-						key    : value,
-						code   : value,
-						keyCode: value // integer
-					})
-				}
-			})
-		},
 
 		///** Wait for iframe loaded
 		// ** timeout: in ms, default is 5000
@@ -126,17 +167,6 @@
 		//	}, timeout)
 		//	return promise
 		//},
-
-
-		// todo, url�����ǿ�ѡ��, ��Ӧ����callback, û��timeout
-		/** Navigate to a url */
-		init: function (url, timeout) {
-			if (this._iframe) {
-				this._iframe.src = url
-			} else {
-				this._win.location.href = url
-			}
-		},
 
 		injectScript: function (scriptUrl) {
 			var script = this._doc.createElement('script')

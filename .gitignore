@@ -5,3 +5,5 @@ dist/uiRun-core.js
 
 *.css
 *.html
+
+!test/click/index.html

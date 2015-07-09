@@ -6,11 +6,11 @@ define(function (require) {
 	var modules = [
 		//'waitForLoaded',
 
-		'clearValue',
-		'click',
-		'getTitle',
-		'init',
-		'setValue'
+		//'clearValue',
+		'click'
+		//'getTitle',
+		//'init',
+		//'setValue'
 		//'waitForElementPresent'
 	]
 
