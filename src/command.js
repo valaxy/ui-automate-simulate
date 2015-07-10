@@ -2,8 +2,14 @@
 	var $ = uiRun.jQuery
 
 	// @问题记录日志
-	// 曾经试过用requirejs来打包, 结果有冲突
-	//
+	// 曾经试过用requirejs来打包, 结果与seajs有冲突
+	// 通过隐藏全局变量域的方式也解决不了, 所以之后不再使用requirejs打包, 采用build的时候将相关文件合并
+
+
+	// @设计决策
+	// 使用throw Error的方式传递异常情况, 而不是返回码
+	// 因为比较好编码, 代码可读性也更高
+
 
 	// as a global var to use
 	var Command = window.uiRun.Command = function (options) {
@@ -21,6 +27,79 @@
 			this._doc = document
 		}
 
+	}
+
+	var STATUS = {
+		SUCCESS           : 0,
+		ELEMENT_NOT_FIND  : 1,
+		ELEMENT_EXCEED_ONE: 2
+	}
+
+
+	var KEYS = {
+		"NULL"       : "\uE000",
+		"CANCEL"     : "\uE001",
+		"HELP"       : "\uE002",
+		"BACK_SPACE" : "\uE003",
+		"TAB"        : "\uE004",
+		"CLEAR"      : "\uE005",
+		"RETURN"     : "\uE006",
+		"ENTER"      : "\uE007",
+		"SHIFT"      : "\uE008",
+		"CONTROL"    : "\uE009",
+		"ALT"        : "\uE00A",
+		"PAUSE"      : "\uE00B",
+		"ESCAPE"     : "\uE00C",
+		"SPACE"      : "\uE00D",
+		"PAGEUP"     : "\uE00E",
+		"PAGEDOWN"   : "\uE00F",
+		"END"        : "\uE010",
+		"HOME"       : "\uE011",
+		"LEFT_ARROW" : "\uE012",
+		"UP_ARROW"   : "\uE013",
+		"RIGHT_ARROW": "\uE014",
+		"DOWN_ARROW" : "\uE015",
+		"INSERT"     : "\uE016",
+		"DELETE"     : "\uE017",
+		"SEMICOLON"  : "\uE018",
+		"EQUALS"     : "\uE019",
+		"NUMPAD0"    : "\uE01A",
+		"NUMPAD1"    : "\uE01B",
+		"NUMPAD2"    : "\uE01C",
+		"NUMPAD3"    : "\uE01D",
+		"NUMPAD4"    : "\uE01E",
+		"NUMPAD5"    : "\uE01F",
+		"NUMPAD6"    : "\uE020",
+		"NUMPAD7"    : "\uE021",
+		"NUMPAD8"    : "\uE022",
+		"NUMPAD9"    : "\uE023",
+		"MULTIPLY"   : "\uE024",
+		"ADD"        : "\uE025",
+		"SEPARATOR"  : "\uE026",
+		"SUBTRACT"   : "\uE027",
+		"DECIMAL"    : "\uE028",
+		"DIVIDE"     : "\uE029",
+		"F1"         : "\uE031",
+		"F2"         : "\uE032",
+		"F3"         : "\uE033",
+		"F4"         : "\uE034",
+		"F5"         : "\uE035",
+		"F6"         : "\uE036",
+		"F7"         : "\uE037",
+		"F8"         : "\uE038",
+		"F9"         : "\uE039",
+		"F10"        : "\uE03A",
+		"F11"        : "\uE03B",
+		"F12"        : "\uE03C",
+		"COMMAND"    : "\uE03D",
+		"META"       : "\uE03D"
+	}
+
+	var isJWPModifierKey = function (ch) {
+		if ((KEYS.CONTROL + KEYS.SHIFT + KEYS.ALT + KEYS.COMMAND).indexOf(ch) >= 0) {
+			return true
+		}
+		return false
 	}
 
 
@@ -42,6 +121,15 @@
 
 		KEYS: $.simulate.keyCode,
 
+		_throw: function (code, data) {
+			switch (code) {
+				case STATUS.ELEMENT_EXCEED_ONE:
+					throw new Error('element selector:' + data.selector + ' have ' + data.count + ' count, is too much')
+				case STATUS.ELEMENT_NOT_FIND:
+					throw new Error('element selector:' + data + ' not found')
+			}
+		},
+
 		create: function () {
 			var obj = Object.create()
 			obj.fail = false
@@ -53,29 +141,15 @@
 			return this._doc.querySelectorAll(selector).length == 1
 		},
 
-		getOnly: function (selector) {
-			var doms = this._doc.querySelectorAll(selector)
-			if (doms.length != 1) {
-				throw new Error('query selector "' + selector + '" find count of ' + doms.length)
-			}
-			return doms[0]
-		},
-
-
-		//-----------------------------------------------------------
-		// UP:   Not Nightwatch API
-		// DOWN: Nightwatch API
-		//-----------------------------------------------------------
 
 		clearValue: function (selector) {
-			this.getOnly(selector).value = ''
+			this.queryOnlyElement(selector).value = ''
 		},
 
 
 		/** Simulate click */
 		click: function (selector) {
-			var element = this.getOnly(selector)
-			var $element = $(element)
+			var $element = $(this.queryOnlyElement(selector))
 
 			// trigger mousedown
 			$element.simulate('mousedown')
@@ -92,44 +166,54 @@
 
 
 		/** Simulate Keyboard
-		 ** value: the key code
+		 ** values: the key code
 		 */
-		sendKey: function (selector, value) {
-			var $input = $(this.getOnly(selector))
+		sendKey: function (selector, values) {
+			var $input = $(this.queryOnlyElement(selector))
 
-			$input.simulate('keydown', {
-				key    : value,
-				code   : value,
-				keyCode: value // integer
-			})
+			values.forEach(function (value) {
+				var ch = value.charCodeAt(0)
 
-			$input.simulate('keypress', {
-				key    : value,
-				code   : value,
-				keyCode: value
-			})
+				$input.simulate('keydown', {
+					key    : ch,
+					code   : ch,
+					keyCode: ch // integer
+				})
 
-			$input.simulate('keyup', {
-				key    : value,
-				code   : value,
-				keyCode: value
+				// before input
+
+				$input.simulate('keypress', { // already deprecate
+					key    : ch,
+					code   : ch,
+					keyCode: ch
+				})
+
+				// input
+
+				// default action
+
+				$input.simulate('keyup', {
+					key    : ch,
+					code   : ch,
+					keyCode: ch
+				})
 			})
 		},
 
-		/** Simuate Keyboard */
-		inputText: function (selector, text) {
-			var input = this.getOnly(selector)
-			input.value += text
+		/** Simulate Keyboard */
+		setValue: function (selector, text) {
+			var input = this.queryOnlyElement(selector)
+			input.value = text
 		},
 
 
 		getAttribute: function (selector, attribute) {
-			$(this.getOnly(selector)).attr(attribute)
+			$(this.queryOnlyElement(selector)).attr(attribute)
 		},
 
 
 		getTagName: function (selector) {
-			return this.getOnly(selector).tagName
+			return this.queryOnlyElement(selector).tagName
 		},
 
 
@@ -138,7 +222,7 @@
 		},
 
 		getValue: function (selector) {
-			var control = this.getOnly(selector)
+			var control = this.queryOnlyElement(selector)
 			return control.value
 		},
 
@@ -172,6 +256,26 @@
 			var script = this._doc.createElement('script')
 			script.src = scriptUrl
 			this._doc.body.appendChild(script)
+		},
+
+
+		/** Query a element only has one
+		 ** return: SUCCESS | ELEMENT_NOT_FIND | ELEMENT_EXCEED_ONE
+		 */
+		queryOnlyElement: function (selector) {
+			var doms = this._doc.querySelectorAll(selector)
+			if (doms.length > 1) {
+				this._throw(STATUS.ELEMENT_EXCEED_ONE, {
+					selector: selector,
+					count   : doms.length
+				})
+			} else if (doms.length == 0) {
+				this._throw(STATUS.ELEMENT_NOT_FIND, {
+					selector: selector
+				})
+			} else {
+				return doms[0]
+			}
 		}
 
 	}

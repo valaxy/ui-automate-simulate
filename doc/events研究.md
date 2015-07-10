@@ -7,3 +7,6 @@
 - mouseover/mouseout
 - mouseenter/mouseleave
 - mousewheel 
+
+# Keyboard Event
+- keypress, charCode/keyCode/which

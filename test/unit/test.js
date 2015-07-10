@@ -7,10 +7,10 @@ define(function (require) {
 		//'waitForLoaded',
 
 		//'clearValue',
-		'click'
+		'click',
 		//'getTitle',
 		//'init',
-		//'setValue'
+		'setValue'
 		//'waitForElementPresent'
 	]
 

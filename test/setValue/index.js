@@ -5,21 +5,14 @@ define(function (require) {
 
 	QUnit.test('input string', function (assert) {
 		var async = assert.async()
-		c.init('../setValue/index.html').then(function () {
+		c._iframe.src = '../setValue/index.html'
+		c._iframe.onload = function () {
 			c.setValue('input', '123')
 			assert.equal(c.getValue('input'), '123')
 			async()
-		})
+		}
 	})
 
 
-	QUnit.test('press enter', function (assert) {
-		var async = assert.async()
-		c.init('../setValue/index.html').then(function () {
-			c.setValue('input', ['abc', c.KEYS.ENTER])
-			assert.equal(c.getValue('input'), 'ok')
-			async()
-		})
-	})
 
 })

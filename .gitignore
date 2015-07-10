@@ -7,3 +7,4 @@ dist/uiRun-core.js
 *.html
 
 !test/click/index.html
+!test/setValue/index.html
