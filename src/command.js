@@ -126,7 +126,7 @@
 				case STATUS.ELEMENT_EXCEED_ONE:
 					throw new Error('element selector:' + data.selector + ' have ' + data.count + ' count, is too much')
 				case STATUS.ELEMENT_NOT_FIND:
-					throw new Error('element selector:' + data + ' not found')
+					throw new Error('element selector:' + data.selector + ' not found')
 			}
 		},
 
