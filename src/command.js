@@ -151,14 +151,17 @@
 		click: function (selector) {
 			var $element = $(this.queryOnlyElement(selector))
 
+			// @问题记录日志
+			// simulate方法在X5下有问题, 暂时关闭, 期待测试
+
 			// trigger mousedown
-			$element.simulate('mousedown')
+			//$element.simulate('mousedown')
 
 			// trigger focus
 			$element.focus()
 
 			// trigger mouseup
-			$element.simulate('mouseup')
+			//$element.simulate('mouseup')
 
 			// trigger click
 			$element.click()
