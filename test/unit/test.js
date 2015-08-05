@@ -4,13 +4,13 @@ define(function (require) {
 	var Command = window.uiRun.Command
 
 	var modules = [
+		'queryOnlyElement'
 		//'waitForLoaded',
-
 		//'clearValue',
-		'click',
+		//'click',
 		//'getTitle',
 		//'init',
-		'setValue'
+		//'setValue'
 		//'waitForElementPresent'
 	]
 

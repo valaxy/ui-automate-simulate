@@ -8,3 +8,4 @@ dist/uiRun-core.js
 
 !test/click/index.html
 !test/setValue/index.html
+!test/queryOnlyElement/index.html

@@ -4,8 +4,11 @@
     <meta charset="utf-8">
 </head>
 <body>
-<input type="text">
+<div class="root">
+    <input type="text">
+</div>
 <script>
+    var root = document.querySelector('.root')
     var input = document.getElementsByTagName('input')[0]
     var counter = ''
     input.onclick = function () {
@@ -32,9 +35,21 @@
     input.addEventListener('focus', function () {
         counter += '8'
     })
+    root.onclick = function () {
+        counter += '9'
+    }
+    root.addEventListener('click', function () {
+        counter += 'a'
+    })
+    document.body.onclick = function () {
+        counter += 'b'
+    }
+    document.body.addEventListener('click', function () {
+        counter += 'c'
+    })
 
 
-    //    // get result
+    // get result
     //    input.addEventListener('click', function () {
     //        setTimeout(function () {
     //            alert(counter)

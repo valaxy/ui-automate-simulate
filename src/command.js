@@ -113,6 +113,19 @@
 	 */
 
 
+	var createTouchEvent = function () {
+		var e = document.createEvent('TouchEvent')
+		e.initEvent('touchstart')
+		var options = {}
+
+		e.initTouchEvent(document.body, document.body, document.body, 'touchstart', window, 6, 7, 8, 9, false, false, false, false)
+		console.log(e)
+
+
+		var list = document.createEvent('')
+	}
+
+
 	/** Events:
 	 **     assertFail:
 	 **     error(msg):
@@ -126,7 +139,7 @@
 				case STATUS.ELEMENT_EXCEED_ONE:
 					throw new Error('element selector:' + data.selector + ' have ' + data.count + ' count, is too much')
 				case STATUS.ELEMENT_NOT_FIND:
-					throw new Error('element selector:' + data.selector + ' not found')
+					throw new Error('element selector:' + data.selector + ' at index:' + data.index + ' not found')
 			}
 		},
 
@@ -263,28 +276,43 @@
 
 
 		/** Query a element only has one
-		 ** return: SUCCESS | ELEMENT_NOT_FIND | ELEMENT_EXCEED_ONE
+		 ** selector: css selector
+		 ** index: optional, at the index if provided
+		 ** throw: ELEMENT_NOT_FIND | ELEMENT_EXCEED_ONE
+		 ** return: the only DOM
 		 */
-		queryOnlyElement: function (selector) {
+		queryOnlyElement: function (selector, index) {
 			var doms = this._doc.querySelectorAll(selector)
-			if (doms.length > 1) {
-				this._throw(STATUS.ELEMENT_EXCEED_ONE, {
-					selector: selector,
-					count   : doms.length
-				})
-			} else if (doms.length == 0) {
-				this._throw(STATUS.ELEMENT_NOT_FIND, {
-					selector: selector
-				})
+			if (index == undefined) {
+				if (doms.length > 1) {
+					this._throw(STATUS.ELEMENT_EXCEED_ONE, {
+						selector: selector,
+						count   : doms.length
+					})
+				} else if (doms.length == 0) {
+					this._throw(STATUS.ELEMENT_NOT_FIND, {
+						selector: selector,
+						index   : 0
+					})
+				} else {
+					return doms[0]
+				}
 			} else {
-				return doms[0]
+				if (index < doms.length) {
+					return doms[index]
+				} else {
+					this._throw(STATUS.ELEMENT_NOT_FIND, {
+						selector: selector,
+						index   : index
+					})
+				}
 			}
 		}
-
 	}
 
 	return Command
 
+	// 下面的分号不要删
 })();
 
 

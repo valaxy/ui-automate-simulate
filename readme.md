@@ -1,4 +1,5 @@
 > This is under development
+> For now, it is only for chrome and x5 purpose
 
 UI automate in User Agent of Javascript environment
 
